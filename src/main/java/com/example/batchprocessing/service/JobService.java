@@ -63,14 +63,14 @@ public class JobService {
 	}
 
 	private Step getStep(String stepName, List<Person> personList) {
-		Step step1 = stepBuilderFactory.get("step1").<Person, Person>chunk(10).reader(new ListItemReader<>(personList))
+		Step step1 = stepBuilderFactory.get(stepName).<Person, Person>chunk(10).reader(new ListItemReader<>(personList))
 				.processor(processor).writer(writer).build();
 		return step1;
 
 	}
 
 	private Job getJob(String jobName, List<Person> personList) {
-		Job job = jobBuilderFactory.get("importUserJob").incrementer(new RunIdIncrementer()).listener(listener)
+		Job job = jobBuilderFactory.get(jobName).incrementer(new RunIdIncrementer()).listener(listener)
 				.flow(getStep("step1", personList)).end().build();
 		return job;
 
