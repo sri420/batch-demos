@@ -1,4 +1,4 @@
-1ckage com.example.batchprocessing.config;
+package com.example.batchprocessing.config;
 
 import javax.sql.DataSource;
 
