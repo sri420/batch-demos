@@ -21,8 +21,7 @@ public class BatchConfiguration {
 					.itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
 					.sql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)")
 					.dataSource(dataSource)
-			
-		.build();
-							}
+			                .build();
+				}
 }
 
