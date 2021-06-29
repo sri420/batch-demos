@@ -1,0 +1,102 @@
+By default, AWS Glue cannot access resources
+--Other AWS Services like 
+   S3,
+   DynamoDB etc
+
+--Resources within VPC like
+    AWS Document DB Cluster
+    RDS Instance
+    Self-hosted DB in EC2 like Mongodb/MySQL and so on.
+
+--Resources Outside AWS
+    On-premises data center connected to AWS via DirectConnect/VPN as well as
+    Public internet resources.
+
+
+AWS Glue needs ENIs in a private subnet of the VPC to connect to,
+ VPC resources and other resources outside AWS
+ In addition, for resources outside AWS like public internet resource , it needs
+ NAT Gateway with EIP
+
+Provides network connectivity for AWS Glue through your VPC.
+
+
+
+ENI is a Private IP Address in a private subnet which is used to communiate with,
+--VPC resources and also
+--Resources in the on-premises environment when connected via DirectConnect/VPN.
+--Public resources using NAT Gateway and EIP.
+
+For other AWS Services like S3,DynamoDB etc which might be outside the VPC but within AWS Cloud,
+it needs proper role/policy/permissions to access them.
+
+
+
+VPC Level Routing for accessing resourcs in same or different subnet.
+VPC Peering for accessing resources in differnet VPC within same or different region .
+
+S3 Access is needed for,
+    Storing ETL scripts,
+    temporary files
+
+S3 VPC Endpoints provide access to S3.
+
+
+
+
+Glue Connection
+    Creates a ENI in a private subnet with a private IP address
+
+Glue Crawler
+     Catalogs data sources and creates DB/Table metadata objects.
+
+Glue Database/Tables
+    Metadata objects  for the crawled resources created by Glue Crawler
+
+Glue Job
+`  References the Glue Connection/Glue DB/Tables to access resources 
+    (i)   Within VPC,
+    (ii)  Outside AWS ,but connected to AWS via DirectConnect/VPN
+    (iii) Public internet resources  (via NAT Gateway with EIP)
+
+
+For on-premises resources connected to AWS Cloud via VPN/DirectConnect , 
+(i) Firewall settings needs to be created , if required to allow inbound/outbound access to ENI private 
+    subnet in VPC.
+
+(ii) VPC private subnet ENI should  have access to on-premise IP Addresses/Ports.
+
+
+
+AWS Glue needs to communicate with its components.
+We specify a SG with a self-referencing inbound rule for all TCP ports.
+SG is attached to the ENI in the private subnet.
+Provides communication between ENIs within a VPC/subnet and prevents incoming network access from
+other unspecified sources.
+
+By default, SG allows for all outbound traffic and is minimum required for AWS Glue.
+
+We can restrict outbound rules, to just the destinations where the on-premises database is running.
+
+
+Firewall Ports
+==============
+Modify on-premises firewall settings and allow incoming connections from ,
+the private subnet that you selected for the connection.
+
+
+
+1.DocumentDB Cluster in AWS
+2.RDS in AWS
+3.DynamoDB in AWS
+4.Self Managed DB in EC2
+        5.DB hosted and accessible by Public Internet ( outside AWS Cloud / on-premises environment )
+6.SQL/NoSQL DB in hybrid cloud ( on-premises environment)
+
+
+
+
+
+
+
+
